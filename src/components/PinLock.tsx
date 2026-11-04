@@ -8,6 +8,7 @@ import {
   disablePrivacyLock,
   refreshPrivacyLock,
   subscribePrivacyLock,
+  armLockKeepSession,
   getLockTimeout,
   setLockTimeout,
   getLockOwnerName,
@@ -118,6 +119,12 @@ export function PrivacyLockSettings({ signedIn }: { signedIn?: boolean }) {
     }
     setBusy(true);
     const { synced } = await enablePrivacyLock(newPin, name);
+    // Arm the lock for this device too. Without this, the current tab is
+    // considered "unlocked" until you background/reload the app — so on a
+    // PWA that never reloads, or when switching tabs quickly, it can look
+    // like "the screen doesn't lock after applying the PIN".
+    markSessionUnlocked(); // keep this tab usable right now…
+    armLockKeepSession();  // …but require the PIN on the next open/reload/background
     setBusy(false);
     setEnabled(true);
     setNewPin('');

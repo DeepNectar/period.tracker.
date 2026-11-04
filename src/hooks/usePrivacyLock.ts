@@ -365,6 +365,15 @@ export function markSessionUnlocked() {
   sessionStorage.setItem(SESSION_UNLOCK_KEY, '1');
 }
 
+/**
+ * Arm the lock WITHOUT touching the current session — used right after a PIN
+ * is created so the freshly-set gate takes effect on the very next reload or
+ * background event (the current tab stays usable until then).
+ */
+export function armLockKeepSession() {
+  localStorage.setItem(LOCK_UNTIL_KEY, String(Date.now() + 24 * 60 * 60 * 1000));
+}
+
 // ---------- Auto-lock timing (per-device preference) ----------
 
 export function getLockTimeout(): 'immediate' | number {

@@ -19,6 +19,8 @@ type Screen = 'home' | 'today' | 'history' | 'calendar' | 'predictions' | 'tools
 function AppContent() {
   const [screen, setScreen] = useState<Screen>('home');
   const [locked, setLocked] = useState(() => isLocked());
+  const lockedRef = useRef(locked);
+  lockedRef.current = locked;
   const [profileTick, setProfileTick] = useState(0); // re-render header when name changes
   // The scrollable content region. We reset it to the top whenever the user
   // switches tabs so every screen always starts fully visible on screen.
@@ -86,6 +88,12 @@ function AppContent() {
             if (document.visibilityState === 'hidden') lockNow();
           }, ms);
         }
+      } else if (document.visibilityState === 'visible' && !lockedRef.current) {
+        // Tab came back to the foreground — re-check the cross-device config
+        // so a PIN enabled on another device locks this one immediately.
+        void refreshPrivacyLock().then((cfg) => {
+          if (cfg.enabled && isLocked()) setLocked(true);
+        });
       }
     };
 
