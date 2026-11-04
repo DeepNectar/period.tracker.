@@ -282,7 +282,7 @@ export interface BbtReading {
 
 export interface BbtAnalysis {
   unit: 'F' | 'C';
-  readings: BbtAnalysis_['readings'];
+  readings: BbtReading[];
   coveredDays: number;
   possibleOvulation: string | null; // date of first day of sustained rise
   coverline: number | null;
@@ -290,9 +290,6 @@ export interface BbtAnalysis {
   interpretation: string;
   tips: string[];
 }
-
-type BbtAnalysis_ = { readings: BbtReading[] };
-
 
 export function analyzeBbt(readings: BbtReading[], unit: 'F' | 'C'): BbtAnalysis | null {
   const clean = readings

@@ -263,7 +263,7 @@ function AppContent() {
           <PredictionsScreen entries={entries} />
         )}
         {screen === 'tools' && (
-          <ToolsScreen entries={entries} />
+          <ToolsScreen entries={entries} userId={user?.id ?? null} />
         )}
         {screen === 'insights' && (
           <InsightsScreen entries={entries} />
