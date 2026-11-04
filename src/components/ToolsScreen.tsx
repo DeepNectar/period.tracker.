@@ -758,7 +758,7 @@ export function ToolsScreen({ entries, userId: userIdProp = null }: Props) {
         {tool.id === 'habits' && <HabitTracker />}
         {tool.id === 'reminders' && <NotificationSettings entries={entries} userId={userId} />}
         {tool.id === 'partner' && <PartnerShare entries={entries} userId={userId} />}
-        {tool.id === 'privacy' && <PrivacyLockSettings />}
+        {tool.id === 'privacy' && <PrivacyLockSettings signedIn={!!user} />}
         {tool.id === 'data' && <ExportPanel entries={entries} />}
       </div>
     );
