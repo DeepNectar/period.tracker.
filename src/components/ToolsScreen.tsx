@@ -334,11 +334,17 @@ function OvulationTool({ entries }: { entries: PeriodEntry[] }) {
   const autoStart = useMemo(() => getLastPeriodStartKey(entries), [entries]);
   const [start, setStart] = useState(autoStart ?? '');
   const [overridden, setOverridden] = useState(false);
+  const [lenOverridden, setLenOverridden] = useState(false);
   const [len, setLen] = useState<number>(stats.avgCycleLength);
 
   useEffect(() => {
     if (!overridden && autoStart) setStart(autoStart);
   }, [autoStart, overridden]);
+
+  // Follow the logged average until the user moves the slider manually.
+  useEffect(() => {
+    if (!lenOverridden) setLen(stats.avgCycleLength);
+  }, [stats.avgCycleLength, lenOverridden]);
 
   const result = useMemo(() => {
     if (!start) return null;
@@ -374,7 +380,7 @@ function OvulationTool({ entries }: { entries: PeriodEntry[] }) {
           min={21}
           max={45}
           value={len}
-          onChange={(e) => setLen(Number(e.target.value))}
+          onChange={(e) => { setLenOverridden(true); setLen(Number(e.target.value)); }}
           className="w-full accent-pink-500"
         />
         <div className="flex justify-between text-[10px] text-gray-400">
@@ -443,17 +449,22 @@ function BbtTool() {
     const t = parseFloat(draftTemp);
     if (!draftDate || Number.isNaN(t)) return;
     setRows((prev) => {
-      const withoutDup = prev.filter((r) => !(r.date === draftDate && Number.isNaN(r.temp)));
-      const next = [...withoutDup.filter((r) => !Number.isNaN(r.temp)), { date: draftDate, temp: t }].sort((a, b) =>
-        a.date < b.date ? -1 : 1
-      );
-      return next;
+      // Replace any existing reading for the same date, keep empty placeholder rows.
+      const withoutSameDate = prev.filter((r) => r.date !== draftDate || Number.isNaN(r.temp));
+      const filled = withoutSameDate.filter((r) => !Number.isNaN(r.temp));
+      const empties = withoutSameDate.filter((r) => Number.isNaN(r.temp));
+      const next = [...filled, { date: draftDate, temp: t }].sort((a, b) => (a.date < b.date ? -1 : 1));
+      return [...next, ...empties];
     });
     setDraftDate('');
     setDraftTemp('');
   };
 
-  const removeRow = (i: number) => setRows((prev) => prev.filter((_, idx) => idx !== i));
+  const removeRow = (i: number) =>
+    setRows((prev) => {
+      const next = prev.filter((_, idx) => idx !== i);
+      return next.length ? next : [{ date: todayKey(), temp: NaN }];
+    });
 
   const temps = rows.filter((r) => !Number.isNaN(r.temp)).map((r) => r.temp);
   const minT = temps.length ? Math.min(...temps) : 0;
@@ -717,7 +728,10 @@ export function ProfileTool() {
 
 // ---------- Main screen ----------
 
-export function ToolsScreen({ entries, userId = null }: Props) {
+export function ToolsScreen({ entries, userId: userIdProp = null }: Props) {
+  const { user } = useAuth();
+  // Fall back to the signed-in account id so Reminders / Partner Mode can sync.
+  const userId = userIdProp ?? user?.id ?? null;
   const [active, setActive] = useState<ToolId | null>(null);
   const tool = TOOLS.find((t) => t.id === active);
 
