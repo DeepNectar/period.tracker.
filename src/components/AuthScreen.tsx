@@ -34,7 +34,7 @@ export function AuthScreen({ onContinueAsGuest, onAuthed }: Props) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-purple-50 to-pink-50 dark:from-gray-950 dark:via-purple-950/30 dark:to-gray-900 p-6">
+    <div className="dvh-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-purple-50 to-pink-50 dark:from-gray-950 dark:via-purple-950/30 dark:to-gray-900 p-4 sm:p-6 safe-area-top safe-area-bottom overflow-y-auto">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="text-5xl mb-3">🌸</div>

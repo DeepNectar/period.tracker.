@@ -85,7 +85,7 @@ export function HomeScreen({ activeEntry, entries, onStartPeriod, onNavigate }: 
   };
 
   return (
-    <div className="px-4 pb-24 pt-2">
+    <div className="screen-pad pb-24 pt-2 sm:pt-4">
       <LiveClock />
 
       {/* Animated cycle journey ring */}
@@ -346,7 +346,7 @@ export function HomeScreen({ activeEntry, entries, onStartPeriod, onNavigate }: 
             title="🔮 Your Predictions"
             subtitle={`Next period ${formatDateShort(p.nextPeriodDate)} · ${countdownLabel(p.daysUntilNextPeriod)}${p.isPeriodLate ? ' · ⚠️ looks late' : ''}`}
             headerRight={
-              <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold uppercase ${
+              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                 p.confidence === 'high' ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300'
                 : p.confidence === 'medium' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300'
                 : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
@@ -356,15 +356,15 @@ export function HomeScreen({ activeEntry, entries, onStartPeriod, onNavigate }: 
             <div className="grid grid-cols-3 gap-2 text-center">
               <div className="rounded-xl bg-white/70 dark:bg-gray-900/40 py-2.5">
                 <p className="text-sm font-bold text-pink-600 dark:text-pink-400">{formatDateShort(p.nextPeriodDate)}</p>
-                <p className="text-[9px] text-gray-500 dark:text-gray-400 mt-0.5">Next period · {countdownLabel(p.daysUntilNextPeriod)}</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Next period · {countdownLabel(p.daysUntilNextPeriod)}</p>
               </div>
               <div className="rounded-xl bg-white/70 dark:bg-gray-900/40 py-2.5">
                 <p className="text-sm font-bold text-purple-600 dark:text-purple-400">{formatDateShort(p.ovulationDate)}</p>
-                <p className="text-[9px] text-gray-500 dark:text-gray-400 mt-0.5">Ovulation · {countdownLabel(p.daysUntilOvulation)}</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Ovulation · {countdownLabel(p.daysUntilOvulation)}</p>
               </div>
               <div className="rounded-xl bg-white/70 dark:bg-gray-900/40 py-2.5">
                 <p className="text-sm font-bold text-green-600 dark:text-green-400">{p.fertileStart ? format(parseISO(p.fertileStart), 'd MMM') : '—'}</p>
-                <p className="text-[9px] text-gray-500 dark:text-gray-400 mt-0.5">Fertile window opens</p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Fertile window opens</p>
               </div>
             </div>
             {p.isPeriodLate && (

@@ -117,7 +117,7 @@ export function CalendarView({ entries, onEndPeriod, onUpdateEntry }: Props) {
     : null;
 
   return (
-    <div className="px-4 pb-24 pt-6">
+    <div className="screen-pad pb-24 pt-6 sm:pt-8">
       <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Calendar</h1>
       
       {/* Month navigation */}
@@ -160,7 +160,7 @@ export function CalendarView({ entries, onEndPeriod, onUpdateEntry }: Props) {
               } ${isToday && status === 'none' ? 'ring-2 ring-pink-300 dark:ring-pink-600' : ''}`}
             >
               <span>{day.getDate()}</span>
-              {status === 'ovulation' && <span className="text-[8px] leading-none">🥚</span>}
+              {status === 'ovulation' && <span className="text-[10px] leading-none">🥚</span>}
             </button>
           );
         })}

@@ -43,7 +43,7 @@ export function PredictionsScreen({ entries }: Props) {
 
   if (!p.hasData) {
     return (
-      <div className="px-4 pb-24 pt-4">
+      <div className="screen-pad pb-24 pt-4 sm:pt-6">
         <div className="rounded-3xl p-8 bg-white dark:bg-gray-800 border border-pink-100 dark:border-gray-700 text-center shadow-sm">
           <div className="text-5xl mb-4">🔮</div>
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">No predictions yet</h2>
@@ -57,7 +57,7 @@ export function PredictionsScreen({ entries }: Props) {
   }
 
   return (
-    <div className="px-4 pb-24 pt-4">
+    <div className="screen-pad pb-24 pt-4 sm:pt-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
@@ -194,7 +194,7 @@ export function PredictionsScreen({ entries }: Props) {
                     style={{ height: `${Math.min(100, (len / 40) * 100)}%` }}
                     title={`${len} days`}
                   />
-                  <span className="text-[9px] text-gray-400">{len}</span>
+                  <span className="text-[10px] text-gray-400">{len}</span>
                 </div>
               ))}
             </div>

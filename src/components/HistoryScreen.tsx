@@ -274,7 +274,7 @@ export function HistoryScreen({ entries, onEndPeriod, onUpdateEntry, onDeleteEnt
 
   if (entries.length === 0) {
     return (
-      <div className="px-4 pb-24 pt-6">
+      <div className="screen-pad pb-24 pt-6 sm:pt-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100">History</h1>
           {!showAddForm && (
@@ -299,7 +299,7 @@ export function HistoryScreen({ entries, onEndPeriod, onUpdateEntry, onDeleteEnt
   }
 
   return (
-    <div className="px-4 pb-24 pt-6">
+    <div className="screen-pad pb-24 pt-6 sm:pt-8">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100">History</h1>
         <button
