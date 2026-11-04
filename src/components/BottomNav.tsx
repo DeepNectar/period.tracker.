@@ -14,8 +14,8 @@ export function BottomNav({ current, onChange }: { current: Screen; onChange: (s
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-t border-pink-100 dark:border-gray-800 safe-area-bottom">
-      <div className="flex justify-between items-center h-16 max-w-xl mx-auto px-1 xs:px-2">
+    <nav className="shrink-0 relative z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-t border-pink-100 dark:border-gray-800 safe-area-bottom">
+      <div className="flex justify-between items-center h-14 sm:h-16 max-w-xl mx-auto px-1 xs:px-2">
         {items.map(item => (
           <button
             key={item.id}

@@ -34,8 +34,8 @@ export function AuthScreen({ onContinueAsGuest, onAuthed }: Props) {
   };
 
   return (
-    <div className="dvh-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-purple-50 to-pink-50 dark:from-gray-950 dark:via-purple-950/30 dark:to-gray-900 p-4 sm:p-6 safe-area-top safe-area-bottom overflow-y-auto">
-      <div className="w-full max-w-sm">
+    <div className="app-shell dvh-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-purple-50 to-pink-50 dark:from-gray-950 dark:via-purple-950/30 dark:to-gray-900 p-4 sm:p-6 safe-area-top safe-area-bottom app-scroll">
+      <div className="w-full max-w-sm mx-auto shrink-0">
         <div className="text-center mb-8">
           <div className="text-5xl mb-3">🌸</div>
           <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
@@ -162,13 +162,13 @@ export function AuthScreen({ onContinueAsGuest, onAuthed }: Props) {
         {mode === 'signin' && (
           <button onClick={() => setMode('signup')} className="sr-only">go to signup</button>
         )}
-        <div className="mt-4 text-center">
+        <div className="mt-2.5 text-center">
           <button onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')} className="text-[11px] text-gray-400 underline decoration-dotted">
             {mode === 'signin' ? 'New here? Create an account' : 'Already have an account? Sign in'}
           </button>
         </div>
         {(mode === 'forgot' || mode === 'otp-send' || mode === 'otp-verify') && (
-          <button onClick={() => setMode('signin')} className="mt-4 mx-auto flex items-center gap-1 text-xs text-gray-400">
+          <button onClick={() => setMode('signin')} className="mt-2.5 mx-auto flex items-center gap-1 text-xs text-gray-400">
             <ArrowLeft size={12} /> Back to sign in
           </button>
         )}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ToastProvider, useToast } from './components/Toast';
 import { BottomNav } from './components/BottomNav';
 import { HomeScreen } from './components/HomeScreen';
@@ -20,6 +20,9 @@ function AppContent() {
   const [screen, setScreen] = useState<Screen>('home');
   const [locked, setLocked] = useState(() => isLocked());
   const [profileTick, setProfileTick] = useState(0); // re-render header when name changes
+  // The scrollable content region. We reset it to the top whenever the user
+  // switches tabs so every screen always starts fully visible on screen.
+  const scrollRef = useRef<HTMLElement | null>(null);
   const { user } = useAuth();
   const ownerName = getProfileName(user) || localStorage.getItem('pt_profile_name') || null;
   const [darkMode, setDarkMode] = useState(() => {
@@ -120,6 +123,24 @@ function AppContent() {
     document.documentElement.classList.toggle('light', !newMode);
   };
 
+  // Keep the layout locked to the real visible viewport height on mobile
+  // browsers (their address bar shrinking/growing changes the usable height).
+  useEffect(() => {
+    const setVh = () => {
+      const h = window.visualViewport?.height || window.innerHeight;
+      document.documentElement.style.setProperty('--app-h', `${Math.round(h)}px`);
+    };
+    setVh();
+    window.addEventListener('resize', setVh);
+    window.addEventListener('orientationchange', setVh);
+    window.visualViewport?.addEventListener('resize', setVh);
+    return () => {
+      window.removeEventListener('resize', setVh);
+      window.removeEventListener('orientationchange', setVh);
+      window.visualViewport?.removeEventListener('resize', setVh);
+    };
+  }, []);
+
   // Privacy Lock gate — shown immediately on reopen/reload/background,
   // BEFORE any app data is rendered.
   if (locked) {
@@ -128,7 +149,7 @@ function AppContent() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center dvh-screen bg-pink-50 dark:bg-gray-950">
+      <div className="app-shell flex items-center justify-center dvh-screen bg-pink-50 dark:bg-gray-950">
         <div className="text-center">
           <div className="animate-spin w-10 h-10 border-3 border-pink-200 border-t-pink-500 rounded-full mx-auto mb-4" />
           <p className="text-sm text-gray-500 dark:text-gray-400">Loading your data...</p>
@@ -139,7 +160,7 @@ function AppContent() {
 
   if (error === 'TABLE_NOT_FOUND') {
     return (
-      <div className="flex items-center justify-center dvh-screen bg-pink-50 dark:bg-gray-950 p-4 sm:p-6">
+      <div className="app-scroll app-shell flex items-center justify-center dvh-screen bg-pink-50 dark:bg-gray-950 p-4 sm:p-6">
         <div className="max-w-sm w-full bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-lg text-center">
           <Database size={40} className="mx-auto text-pink-400 mb-3" />
           <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-2">Setup Required</h2>
@@ -159,7 +180,7 @@ function AppContent() {
 
   if (error && error !== 'TABLE_NOT_FOUND') {
     return (
-      <div className="flex items-center justify-center dvh-screen bg-pink-50 dark:bg-gray-950 p-4 sm:p-6">
+      <div className="app-scroll app-shell flex items-center justify-center dvh-screen bg-pink-50 dark:bg-gray-950 p-4 sm:p-6">
         <div className="max-w-sm w-full bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-lg text-center">
           <AlertCircle size={40} className="mx-auto text-red-400 mb-3" />
           <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-2">Connection Error</h2>
@@ -176,21 +197,21 @@ function AppContent() {
   }
 
   return (
-    <div className="dvh-screen bg-pink-50 dark:bg-gray-950 transition-colors duration-300">
+    <div className="app-shell dvh-screen bg-pink-50 dark:bg-gray-950 transition-colors duration-300">
       {/* Offline Banner */}
       {!isOnline && (
-        <div className="fixed top-0 left-0 right-0 z-[200] bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 text-xs font-medium text-center py-2 px-4 safe-area-top">
+        <div className="fixed top-0 left-0 right-0 z-[200] bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 text-xs font-medium text-center py-1.5 px-4 safe-area-top">
           ⚠️ You're offline. Changes will sync when you reconnect.
         </div>
       )}
 
-      {/* Top bar */}
-      <div className="sticky top-0 z-40 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border-b border-pink-100 dark:border-gray-800 safe-area-top">
-        <div className="flex items-center justify-between gap-2 px-3 py-3 sm:px-6 max-w-xl mx-auto">
+      {/* Top bar — always visible, never scrolls away */}
+      <header className="shrink-0 z-40 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border-b border-pink-100 dark:border-gray-800 safe-area-top">
+        <div className="flex items-center justify-between gap-2 px-3 py-2 sm:px-6 max-w-xl mx-auto">
           <h1 className="text-sm xs:text-base sm:text-lg font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent truncate">
             🌸 {ownerName ? `${ownerName}'s Tracker` : 'Period Tracker'}
           </h1>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={refetch}
               className="p-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -207,10 +228,11 @@ function AppContent() {
             </button>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Main content */}
-      <main className="max-w-xl mx-auto w-full">
+      {/* Main content — the ONLY region that scrolls (up/down). Everything
+          stays inside the screen: header and bottom nav are pinned. */}
+      <main ref={scrollRef} key={screen} className="app-scroll flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain max-w-xl mx-auto w-full">
         {screen === 'home' && (
           <HomeScreen
             activeEntry={activeEntry}
@@ -248,8 +270,15 @@ function AppContent() {
         )}
       </main>
 
-      {/* Bottom Navigation */}
-      <BottomNav current={screen} onChange={setScreen} />
+      {/* Bottom Navigation — pinned to the bottom of the screen, never scrolls */}
+      <BottomNav
+        current={screen}
+        onChange={(s) => {
+          setScreen(s);
+          // Always start the new tab at the top so everything is visible.
+          requestAnimationFrame(() => scrollRef.current?.scrollTo({ top: 0 }));
+        }}
+      />
     </div>
   );
 }

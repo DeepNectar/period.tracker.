@@ -191,7 +191,7 @@ export function TodayScreen({ entries, onStartPeriod }: Props) {
     }`;
 
   return (
-    <div className="screen-pad pb-28 pt-4 sm:pt-6 space-y-4 max-w-xl mx-auto">
+    <div className="screen-pad py-3 space-y-3 max-w-xl mx-auto">
       {/* Header / date */}
       <div className="text-center">
         <p className="text-xs uppercase tracking-widest text-pink-400 font-semibold">Today</p>

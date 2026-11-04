@@ -295,7 +295,7 @@ function DueDateTool({ entries }: { entries: PeriodEntry[] }) {
               </b>{' '}
               pregnant{result.trimester ? ` — ${result.trimester.label}` : ''}
             </p>
-            <div className="mt-4 bg-white/20 rounded-full h-2 overflow-hidden">
+            <div className="mt-2.5 bg-white/20 rounded-full h-2 overflow-hidden">
               <div className="bg-white h-full rounded-full transition-all" style={{ width: `${result.progressPercent}%` }} />
             </div>
             <p className="text-[10px] opacity-80 mt-1">{result.progressPercent}% of the 40-week journey</p>
@@ -717,7 +717,7 @@ export function ToolsScreen({ entries, userId = null }: Props) {
 
   if (tool) {
     return (
-      <div className="screen-pad pb-28 pt-4 sm:pt-6 space-y-4 max-w-xl mx-auto">
+      <div className="screen-pad py-3 space-y-3 max-w-xl mx-auto">
         <button
           onClick={() => setActive(null)}
           className="inline-flex items-center gap-1 text-xs font-semibold text-pink-500 hover:text-pink-600"
@@ -745,7 +745,7 @@ export function ToolsScreen({ entries, userId = null }: Props) {
   }
 
   return (
-    <div className="screen-pad pb-28 pt-4 sm:pt-6 space-y-4 max-w-xl mx-auto">
+    <div className="screen-pad py-3 space-y-3 max-w-xl mx-auto">
       <div className="text-center">
         <p className="text-xs uppercase tracking-widest text-pink-400 font-semibold">Tools</p>
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">Period & fertility calculators</h2>

@@ -162,6 +162,69 @@ body.dark {
   min-height: 100dvh;
 }
 
+/* ---------- App "phone frame" (Android + iOS) ----------
+   The whole app is locked to exactly one screen tall. Only the content
+   region scrolls vertically — never sideways, never the page itself. */
+html, body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+#root {
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.app-shell {
+  /* Prefer the JS-measured visible viewport (--app-h) so mobile browser
+     chrome / iOS notch never pushes content off-screen. */
+  height: 100vh;
+  height: var(--app-h, 100dvh);
+  max-height: 100vh;
+  max-height: 100dvh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* The single vertical scroll container. Momentum scrolling on iOS keeps it
+   feeling native while everything stays inside the screen bounds. */
+.app-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scrollbar-width: thin;
+}
+
+/* Full-screen gates (PIN lock, auth, onboarding) fit the frame and only
+   scroll up/down if a small phone really needs it. */
+.auth-scroll {
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+/* Every screen's top-level container: tight vertical rhythm so more content
+   is visible at once. The bottom nav is part of the flex layout now, so no
+   large fixed bottom padding is needed — just a little breathing room. */
+.compact-top > * + * {
+  margin-top: 0.5rem; /* 8px between cards (was mt-4 / 16px) */
+}
+.screen-pad {
+  padding-bottom: 0.75rem;
+}
+
 /* Safe area for top notch/status bar */
 .safe-area-top {
   padding-top: env(safe-area-inset-top, 0px);
