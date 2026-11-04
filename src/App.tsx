@@ -11,7 +11,7 @@ import { ToolsScreen } from './components/ToolsScreen';
 import { PinGate } from './components/PinLock';
 import { usePeriodData } from './hooks/usePeriodData';
 import { useAuth, getProfileName } from './hooks/useAuth';
-import { isLocked, armLock, getLockTimeout, refreshPrivacyLock, subscribePrivacyLock } from './hooks/usePrivacyLock';
+import { isLocked, armLock, disarmLock, getLockTimeout, refreshPrivacyLock, subscribePrivacyLock, PRIVACY_SESSION_UNLOCK_KEY } from './hooks/usePrivacyLock';
 import { Moon, Sun, RefreshCw, AlertCircle, Database } from 'lucide-react';
 
 type Screen = 'home' | 'today' | 'history' | 'calendar' | 'predictions' | 'tools' | 'insights';
@@ -53,20 +53,21 @@ function AppContent() {
   useEffect(() => {
     const lockNow = () => {
       armLock();
-      sessionStorage.removeItem('pt_unlocked_session');
+      sessionStorage.removeItem(PRIVACY_SESSION_UNLOCK_KEY);
       setLocked(true);
     };
 
     // Pull the cross-device lock config (set on any other device) at startup
     // and whenever auth/session changes.
     void refreshPrivacyLock().then((cfg) => {
-      if (cfg.enabled) setLocked(true);
+      if (cfg.enabled && isLocked()) setLocked(true);
     });
     const unsub = subscribePrivacyLock((cfg) => {
       setProfileTick((t) => t + 1); // owner name may have changed on another device
       if (!cfg.enabled) {
         // Disabled remotely (another device) — no PIN required anymore.
-        sessionStorage.removeItem('pt_unlocked_session');
+        disarmLock();
+        sessionStorage.removeItem(PRIVACY_SESSION_UNLOCK_KEY);
         setLocked(false);
       } else {
         setLocked(isLocked());
@@ -91,7 +92,7 @@ function AppContent() {
     const onHide = () => {
       // Page is being closed/navigated away — always lock immediately.
       armLock();
-      sessionStorage.removeItem('pt_unlocked_session');
+      sessionStorage.removeItem(PRIVACY_SESSION_UNLOCK_KEY);
     };
 
     document.addEventListener('visibilitychange', onVisibilityChange);
@@ -144,7 +145,7 @@ function AppContent() {
   // Privacy Lock gate — shown immediately on reopen/reload/background,
   // BEFORE any app data is rendered.
   if (locked) {
-    return <PinGate onUnlock={() => setLocked(false)} />;
+    return <PinGate onUnlock={() => { disarmLock(); setLocked(false); }} />;
   }
 
   if (loading) {

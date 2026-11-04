@@ -85,7 +85,7 @@ export function PinGate({ onUnlock }: { onUnlock: () => void }) {
 }
 
 /** Settings panel for the privacy lock (used inside Tools screen). */
-export function PrivacyLockSettings() {
+export function PrivacyLockSettings({ signedIn }: { signedIn?: boolean }) {
   const cfg = usePrivacyLock();
   const [enabled, setEnabled] = useState(cfg.enabled || hasPrivacyPin());
   const [name, setName] = useState(() => getLockOwnerName() ?? '');
@@ -96,7 +96,9 @@ export function PrivacyLockSettings() {
   const [busy, setBusy] = useState(false);
 
   // Keep in sync with the cross-device config (changed on other devices).
-  if (cfg.enabled !== enabled && !busy) setEnabled(cfg.enabled || hasPrivacyPin());
+  useEffect(() => {
+    setEnabled(cfg.enabled || hasPrivacyPin());
+  }, [cfg.enabled]);
 
   const saveName = async () => {
     if (!name.trim()) return;
@@ -199,6 +201,12 @@ export function PrivacyLockSettings() {
           >
             <Lock size={14} /> {busy ? 'Enabling…' : 'Enable Lock (all devices)'}
           </button>
+          {signedIn === false && (
+            <p className="text-[11px] text-amber-600 dark:text-amber-400">
+              ⚠️ You are not signed in — the lock will apply on this device only. Sign in to sync it across all your
+              devices.
+            </p>
+          )}
         </div>
       ) : (
         <button

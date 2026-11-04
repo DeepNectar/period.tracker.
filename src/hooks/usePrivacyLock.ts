@@ -47,6 +47,9 @@ const LOCAL_ARMED_KEY = 'pt_privacy_pin_v1'; // stores local copy of hash while 
 const LOCK_UNTIL_KEY = 'pt_lock_until';      // armed-lock timestamp
 const SESSION_UNLOCK_KEY = 'pt_unlocked_session'; // marks current tab as unlocked
 
+/** The key App.tsx uses to mark this tab as unlocked for the session. */
+export const PRIVACY_SESSION_UNLOCK_KEY = SESSION_UNLOCK_KEY;
+
 export type PrivacyLockConfig = {
   enabled: boolean;
   salt: string | null;
@@ -119,23 +122,46 @@ export function setLocalProfileName(name: string) {
   localStorage.setItem('pt_profile_name', name.trim());
 }
 
+function parseRemoteCfg(raw: any): PrivacyLockConfig | null {
+  if (raw && typeof raw === 'object' && raw.enabled && raw.hash && raw.salt) {
+    return {
+      enabled: true,
+      salt: String(raw.salt),
+      hash: String(raw.hash),
+      updated_at: Number(raw.updated_at) || 0,
+      owner_name: raw.owner_name ? String(raw.owner_name) : null,
+    };
+  }
+  return null;
+}
+
 async function fetchRemoteLock(userId: string): Promise<PrivacyLockConfig> {
   const { data, error } = await supabase
     .from(PREFS_TABLE)
-    .select('prefs')
+    .select('prefs, updated_at')
     .eq('user_id', userId)
     .maybeSingle();
-  if (error || !data) return DISABLED;
+  if (error) {
+    // Query failed (offline / transient network hiccup). Do NOT treat that as
+    // "no lock" — keep whatever we already know so the gate never silently
+    // disappears. Fall back to the local copy when we have no prior knowledge.
+    if (cachedCfg.enabled) return cachedCfg;
+    return readLocalFallbackCfg() ?? DISABLED;
+  }
+  if (!data) {
+    // Row genuinely doesn't exist. If a PIN is armed locally (e.g. offline
+    // guest mode), keep honouring it instead of unlocking everything.
+    return readLocalFallbackCfg() ?? DISABLED;
+  }
   const prefs = (data.prefs ?? {}) as Record<string, any>;
-  const cfg = prefs[LOCK_KEY];
-  if (cfg && typeof cfg === 'object' && cfg.enabled && cfg.hash && cfg.salt) {
-    return {
-      enabled: true,
-      salt: String(cfg.salt),
-      hash: String(cfg.hash),
-      updated_at: Number(cfg.updated_at) || 0,
-      owner_name: cfg.owner_name ? String(cfg.owner_name) : null,
-    };
+  const remote = parseRemoteCfg(prefs[LOCK_KEY]);
+  if (remote) return remote;
+  // Remote row exists but has no active lock. Trust the remote state ONLY if
+  // it was written after our local copy (i.e. it's a deliberate disable);
+  // otherwise keep the local fallback so an offline-enabled PIN still gates.
+  const local = readLocalFallbackCfg();
+  if (local && local.updated_at >= (Number(data.updated_at ? new Date(data.updated_at).getTime() : 0))) {
+    return local;
   }
   return DISABLED;
 }
