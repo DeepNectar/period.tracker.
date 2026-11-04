@@ -185,6 +185,51 @@ body.dark {
   box-sizing: border-box;
 }
 
+/* Global no-overflow safety net: applies everywhere (.app-scroll content,
+   full-screen gates like auth/PIN/onboarding, modals and bottom sheets).
+   Nothing — text, inputs, buttons, images — may push past the screen edge. */
+.app-shell,
+.auth-scroll {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.app-shell *,
+.auth-scroll * {
+  max-width: 100%;
+}
+
+/* Flex and grid children must be allowed to shrink below their content
+   size, otherwise long words/values force horizontal overflow. */
+.app-shell :is(div, span, p, label, button, a, li),
+.auth-scroll :is(div, span, p, label, button, a, li) {
+  min-width: 0;
+}
+
+/* Any long word (names, dates, URLs, numbers) wraps inside its box instead
+   of spilling off-screen. */
+.app-shell,
+.auth-scroll {
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* Buttons/chips keep their shape but truncate gracefully if needed. */
+.app-shell :is(button, .chip) > span:only-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Fixed-position overlays (modals, sheets, toasts) also stay in bounds. */
+.fixed {
+  max-width: calc(100vw - 1.5rem);
+}
+.fixed.inset-0,
+.fixed.inset-x-0 {
+  max-width: 100vw;
+}
+
 /* iOS dynamic viewport height support (handles browser chrome resize). */
 .dvh-screen {
   min-height: 100vh;
