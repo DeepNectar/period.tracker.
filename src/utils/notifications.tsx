@@ -201,7 +201,7 @@ export function NotificationSettings({ entries, userId }: { entries: PeriodEntry
     <div className="space-y-4">
       <div className="flex items-center gap-3">
         {prefs.enabled ? <BellRing size={20} className="text-pink-500" /> : <Bell size={20} className="text-gray-400" />}
-        <div className="flex-1">
+        <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">Reminders & Notifications</p>
           <p className="text-xs text-gray-500 dark:text-gray-400">
             {permission === 'unsupported'
@@ -308,7 +308,7 @@ export function PartnerShare({ entries, userId }: { entries: PeriodEntry[]; user
     <div className="space-y-3">
       <div className="flex items-center gap-3">
         <Users size={20} className="text-purple-500" />
-        <div className="flex-1">
+        <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">Partner Mode</p>
           <p className="text-xs text-gray-500 dark:text-gray-400">
             Share a read-only link showing current phase & next period. No symptoms or notes are exposed.
@@ -327,7 +327,7 @@ export function PartnerShare({ entries, userId }: { entries: PeriodEntry[]; user
       ) : (
         <>
           <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
-            <span className="text-[11px] text-gray-500 dark:text-gray-400 flex-1 truncate">{shareUrl}</span>
+            <span className="min-w-0 flex-1 break-all text-[11px] text-gray-500 dark:text-gray-400">{shareUrl}</span>
             <button onClick={copy} className="p-1.5 rounded-lg bg-white dark:bg-gray-700 text-pink-500">
               {copied ? <Check size={14} /> : <Copy size={14} />}
             </button>

@@ -8,7 +8,8 @@ import { useToast } from '../components/Toast';
 import { format } from 'date-fns';
 import { CalendarDays, FileJson, FileSpreadsheet, Printer, UploadCloud } from 'lucide-react';
 
-const card = 'bg-white dark:bg-gray-800 rounded-3xl p-4 shadow-sm border border-pink-100 dark:border-gray-700';
+const card =
+  'max-w-full overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-3.5 sm:p-4 shadow-sm border border-pink-100 dark:border-gray-700';
 
 /** Export & sync panel used inside the Tools screen. */
 export function ExportPanel({ entries }: { entries: PeriodEntry[] }) {
@@ -156,9 +157,10 @@ function ActionBtn({ icon, label, onClick }: { icon: React.ReactNode; label: str
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-300 text-xs font-semibold hover:bg-pink-100 dark:hover:bg-pink-900/40 transition-colors"
+      className="flex min-w-0 items-start gap-2 px-3 py-2.5 rounded-xl bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-300 text-xs font-semibold hover:bg-pink-100 dark:hover:bg-pink-900/40 transition-colors text-left"
     >
-      {icon} {label}
+      <span className="shrink-0 mt-0.5">{icon}</span>
+      <span className="min-w-0 break-words">{label}</span>
     </button>
   );
 }

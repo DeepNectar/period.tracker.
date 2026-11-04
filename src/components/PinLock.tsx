@@ -136,10 +136,10 @@ export function PrivacyLockSettings() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        {enabled ? <ShieldCheck size={20} className="text-emerald-500" /> : <ShieldOff size={20} className="text-gray-400" />}
-        <div>
+    <div className="space-y-4 overflow-x-hidden">
+      <div className="flex items-start gap-3">
+        {enabled ? <ShieldCheck size={20} className="text-emerald-500 shrink-0" /> : <ShieldOff size={20} className="text-gray-400 shrink-0" />}
+        <div className="min-w-0">
           <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">
             {enabled ? 'Privacy lock is ON' : 'Privacy lock is OFF'}
           </p>
@@ -160,7 +160,7 @@ export function PrivacyLockSettings() {
             value={name}
             onChange={(e) => setName(e.target.value.slice(0, 40))}
             placeholder="e.g. Priya"
-            className="flex-1 px-3 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-sm outline-none focus:border-pink-300"
+            className="block min-w-0 max-w-full flex-1 px-3 py-2 rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-sm outline-none focus:border-pink-300"
           />
           <button
             onClick={() => void saveName()}

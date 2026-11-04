@@ -5,7 +5,8 @@ import { todayKey } from '../utils/dailyLog';
 import { useAuth } from '../hooks/useAuth';
 import { Flame } from 'lucide-react';
 
-const card = 'bg-white dark:bg-gray-800 rounded-3xl p-4 shadow-sm border border-pink-100 dark:border-gray-700';
+const card =
+  'max-w-full overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-3.5 sm:p-4 shadow-sm border border-pink-100 dark:border-gray-700';
 
 /** Weekly habit grid + streak for cycle-aligned self-care goals. */
 export function HabitTracker() {
@@ -63,7 +64,7 @@ export function HabitTracker() {
         <table className="w-full border-collapse">
           <thead>
             <tr>
-              <th className="text-left text-[10px] font-medium text-gray-400 pb-1 w-28">Habit</th>
+              <th className="w-20 min-w-0 text-left text-[10px] font-medium text-gray-400 pb-1">Habit</th>
               {weekDays.map((k) => (
                 <th key={k} className={`text-[10px] font-medium pb-1 ${k === todayK ? 'text-pink-500' : 'text-gray-400'}`}>
                   {new Date(k + 'T12:00').toLocaleDateString(undefined, { weekday: 'narrow' })}
@@ -74,8 +75,8 @@ export function HabitTracker() {
           <tbody>
             {HABITS.map((h) => (
               <tr key={h.id}>
-                <td className="py-1.5 pr-2">
-                  <span className="text-xs text-gray-700 dark:text-gray-200">
+                <td className="min-w-0 max-w-24 py-1.5 pr-1">
+                  <span className="block truncate text-xs text-gray-700 dark:text-gray-200" title={`${h.emoji} ${h.label}`}>
                     {h.emoji} {h.label}
                   </span>
                 </td>
