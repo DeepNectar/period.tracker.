@@ -8,15 +8,26 @@ import { CalendarView } from './components/CalendarView';
 import { InsightsScreen } from './components/InsightsScreen';
 import { PredictionsScreen } from './components/PredictionsScreen';
 import { ToolsScreen } from './components/ToolsScreen';
+import { SharedView } from './components/SharedView';
 import { PinGate } from './components/PinLock';
 import { usePeriodData } from './hooks/usePeriodData';
 import { useAuth, getProfileName } from './hooks/useAuth';
 import { isLocked, armLock, getLockTimeout, refreshPrivacyLock, subscribePrivacyLock } from './hooks/usePrivacyLock';
 import { Moon, Sun, RefreshCw, AlertCircle, Database } from 'lucide-react';
 
+/** Read a Partner-Mode share token from the URL (#/view/<token>). */
+function getShareTokenFromUrl(): string | null {
+  const m = window.location.hash.match(/#\/view\/([0-9a-fA-F-]{6,})/);
+  return m ? m[1] : null;
+}
+
 type Screen = 'home' | 'today' | 'history' | 'calendar' | 'predictions' | 'tools' | 'insights';
 
 function AppContent() {
+  // Partner Mode: a visitor opening #/view/<token> gets the read-only page.
+  // It must NOT be gated by the owner's PIN and must not load app data.
+  const [shareToken] = useState<string | null>(() => getShareTokenFromUrl());
+
   const [screen, setScreen] = useState<Screen>('home');
   const [locked, setLocked] = useState(() => isLocked());
   const [profileTick, setProfileTick] = useState(0); // re-render header when name changes
@@ -24,6 +35,10 @@ function AppContent() {
   // switches tabs so every screen always starts fully visible on screen.
   const scrollRef = useRef<HTMLElement | null>(null);
   const { user } = useAuth();
+  const userId = user?.id ?? null;
+  // Re-computed on every privacy-lock event (profileTick) so a name changed
+  // on another device shows up here without a reload.
+  void profileTick;
   const ownerName = getProfileName(user) || localStorage.getItem('pt_profile_name') || null;
   const [darkMode, setDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -140,6 +155,13 @@ function AppContent() {
       window.visualViewport?.removeEventListener('resize', setVh);
     };
   }, []);
+
+  // ---- Partner Mode read-only page (#/view/<token>) ----
+  // Rendered BEFORE the PIN gate so the invited visitor never sees a lock
+  // screen or any private data; only phase + next-period estimates show.
+  if (shareToken) {
+    return <SharedView token={shareToken} />;
+  }
 
   // Privacy Lock gate — shown immediately on reopen/reload/background,
   // BEFORE any app data is rendered.
@@ -263,7 +285,7 @@ function AppContent() {
           <PredictionsScreen entries={entries} />
         )}
         {screen === 'tools' && (
-          <ToolsScreen entries={entries} />
+          <ToolsScreen entries={entries} userId={userId} />
         )}
         {screen === 'insights' && (
           <InsightsScreen entries={entries} />
