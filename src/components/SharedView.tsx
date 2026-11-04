@@ -68,7 +68,7 @@ export function SharedView({ token }: { token: string }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-purple-50 dark:bg-gray-950">
+      <div className="dvh-screen flex items-center justify-center bg-purple-50 dark:bg-gray-950 p-4">
         <div className="animate-spin w-10 h-10 border-3 border-purple-200 border-t-purple-500 rounded-full" />
       </div>
     );
@@ -76,7 +76,7 @@ export function SharedView({ token }: { token: string }) {
 
   if (error || !payload) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6 bg-purple-50 dark:bg-gray-950">
+      <div className="dvh-screen flex items-center justify-center p-4 sm:p-6 bg-purple-50 dark:bg-gray-950">
         <div className="max-w-sm text-center bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-lg">
           <ShieldQuestion size={40} className="mx-auto text-purple-400 mb-3" />
           <h2 className="font-bold text-gray-800 dark:text-gray-100 mb-2">Link not available</h2>
@@ -99,7 +99,7 @@ export function SharedView({ token }: { token: string }) {
   const info = phase ? getPhaseInfo(phase.phase) : null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50 dark:from-gray-950 dark:via-purple-950/20 dark:to-gray-900 p-6">
+    <div className="dvh-screen bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50 dark:from-gray-950 dark:via-purple-950/20 dark:to-gray-900 p-4 sm:p-6 safe-area-top">
       <div className="max-w-sm mx-auto pt-10">
         <div className="text-center mb-6">
           <div className="text-4xl mb-2">{info?.emoji || '🌸'}</div>

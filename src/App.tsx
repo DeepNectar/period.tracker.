@@ -28,6 +28,16 @@ function AppContent() {
     }
     return false;
   });
+
+  // Persist theme choice so every reload/device-open starts with the right
+  // background color (the inline script in index.html reads this key).
+  useEffect(() => {
+    try {
+      localStorage.setItem('pt_dark_mode', String(darkMode));
+    } catch {
+      /* storage unavailable (private mode) — ignore */
+    }
+  }, [darkMode]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const { entries, loading, error, activeEntry, startPeriod, endPeriod, updateEntry, deleteEntry, refetch } = usePeriodData();
@@ -118,7 +128,7 @@ function AppContent() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-pink-50 dark:bg-gray-950">
+      <div className="flex items-center justify-center dvh-screen bg-pink-50 dark:bg-gray-950">
         <div className="text-center">
           <div className="animate-spin w-10 h-10 border-3 border-pink-200 border-t-pink-500 rounded-full mx-auto mb-4" />
           <p className="text-sm text-gray-500 dark:text-gray-400">Loading your data...</p>
@@ -129,7 +139,7 @@ function AppContent() {
 
   if (error === 'TABLE_NOT_FOUND') {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-pink-50 dark:bg-gray-950 p-6">
+      <div className="flex items-center justify-center dvh-screen bg-pink-50 dark:bg-gray-950 p-4 sm:p-6">
         <div className="max-w-sm w-full bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-lg text-center">
           <Database size={40} className="mx-auto text-pink-400 mb-3" />
           <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-2">Setup Required</h2>
@@ -149,7 +159,7 @@ function AppContent() {
 
   if (error && error !== 'TABLE_NOT_FOUND') {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-pink-50 dark:bg-gray-950 p-6">
+      <div className="flex items-center justify-center dvh-screen bg-pink-50 dark:bg-gray-950 p-4 sm:p-6">
         <div className="max-w-sm w-full bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-lg text-center">
           <AlertCircle size={40} className="mx-auto text-red-400 mb-3" />
           <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-2">Connection Error</h2>
@@ -166,18 +176,18 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-pink-50 dark:bg-gray-950 transition-colors duration-300">
+    <div className="dvh-screen bg-pink-50 dark:bg-gray-950 transition-colors duration-300">
       {/* Offline Banner */}
       {!isOnline && (
-        <div className="fixed top-0 left-0 right-0 z-[200] bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 text-xs font-medium text-center py-2 px-4">
+        <div className="fixed top-0 left-0 right-0 z-[200] bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 text-xs font-medium text-center py-2 px-4 safe-area-top">
           ⚠️ You're offline. Changes will sync when you reconnect.
         </div>
       )}
 
       {/* Top bar */}
-      <div className="sticky top-0 z-40 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border-b border-pink-100 dark:border-gray-800">
-        <div className="flex items-center justify-between px-4 py-3 max-w-lg mx-auto">
-          <h1 className="text-base font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+      <div className="sticky top-0 z-40 bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border-b border-pink-100 dark:border-gray-800 safe-area-top">
+        <div className="flex items-center justify-between gap-2 px-3 py-3 sm:px-6 max-w-xl mx-auto">
+          <h1 className="text-sm xs:text-base sm:text-lg font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent truncate">
             🌸 {ownerName ? `${ownerName}'s Tracker` : 'Period Tracker'}
           </h1>
           <div className="flex items-center gap-2">
@@ -200,7 +210,7 @@ function AppContent() {
       </div>
 
       {/* Main content */}
-      <main className="max-w-lg mx-auto">
+      <main className="max-w-xl mx-auto w-full">
         {screen === 'home' && (
           <HomeScreen
             activeEntry={activeEntry}

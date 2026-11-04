@@ -2,19 +2,38 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#fdf2f8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0716" media="(prefers-color-scheme: dark)" />
     <title>Period Tracker • Private & Secure</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-      html, body { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Poppins', sans-serif; }
+      html, body { margin: 0; padding: 0; width: 100%; min-height: 100%; font-family: 'Poppins', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif; }
       html.light, html.light body { background-color: #fdf2f8; color: #1f1f1f; }
-      html.dark, html.dark body { background-color: #1a1020; color: #f5f5f5; }
-      #root { width: 100%; height: 100%; }
+      html.dark, html.dark body { background-color: #0b0716; color: #f5f5f5; }
+      @media (prefers-color-scheme: dark) {
+        html:not(.light):not(.dark), html:not(.light):not(.dark) body { background-color: #0b0716; color: #f5f5f5; }
+      }
+      #root { width: 100%; min-height: 100%; }
     </style>
-    <script type="module" crossorigin src="/assets/index-Ci9yMOpt.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BPcj8IUd.css">
+    <script>
+      // Apply saved theme before first paint so phones never flash a
+      // wrong background color (and text stays readable).
+      (function () {
+        try {
+          var saved = localStorage.getItem('pt_dark_mode');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var dark = saved === null ? prefersDark : saved === 'true';
+          document.documentElement.classList.add(dark ? 'dark' : 'light');
+        } catch (e) {
+          document.documentElement.classList.add('light');
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-D-Sh7yhS.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BMfSqIoL.css">
   </head>
   <body>
     <div id="root"></div>

@@ -538,7 +538,7 @@ function BbtTool() {
             </div>
             <div className="flex justify-between mt-2">
               {analysis.readings.map((r, i) => (
-                <span key={i} className="text-[9px] text-gray-400 flex-1 text-center">
+                <span key={i} className="text-[10px] text-gray-400 flex-1 text-center">
                   {format(new Date(`${r.date}T00:00:00`), 'd')}
                 </span>
               ))}
@@ -717,7 +717,7 @@ export function ToolsScreen({ entries, userId = null }: Props) {
 
   if (tool) {
     return (
-      <div className="px-4 pb-28 pt-4 space-y-4 max-w-lg mx-auto">
+      <div className="screen-pad pb-28 pt-4 sm:pt-6 space-y-4 max-w-xl mx-auto">
         <button
           onClick={() => setActive(null)}
           className="inline-flex items-center gap-1 text-xs font-semibold text-pink-500 hover:text-pink-600"
@@ -745,7 +745,7 @@ export function ToolsScreen({ entries, userId = null }: Props) {
   }
 
   return (
-    <div className="px-4 pb-28 pt-4 space-y-4 max-w-lg mx-auto">
+    <div className="screen-pad pb-28 pt-4 sm:pt-6 space-y-4 max-w-xl mx-auto">
       <div className="text-center">
         <p className="text-xs uppercase tracking-widest text-pink-400 font-semibold">Tools</p>
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">Period & fertility calculators</h2>

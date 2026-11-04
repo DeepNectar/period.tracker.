@@ -191,7 +191,7 @@ export function TodayScreen({ entries, onStartPeriod }: Props) {
     }`;
 
   return (
-    <div className="px-4 pb-28 pt-4 space-y-4 max-w-lg mx-auto">
+    <div className="screen-pad pb-28 pt-4 sm:pt-6 space-y-4 max-w-xl mx-auto">
       {/* Header / date */}
       <div className="text-center">
         <p className="text-xs uppercase tracking-widest text-pink-400 font-semibold">Today</p>
@@ -468,7 +468,7 @@ export function TodayScreen({ entries, onStartPeriod }: Props) {
       {quickType && (
         <div className="fixed inset-0 z-[300] bg-black/40 flex items-end sm:items-center justify-center" onClick={() => setQuickType(null)}>
           <div
-            className="bg-white dark:bg-gray-800 w-full sm:max-w-sm rounded-t-3xl sm:rounded-3xl p-5 space-y-4"
+            className="bg-white dark:bg-gray-800 w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-4 sm:p-5 space-y-4 max-h-[85dvh] overflow-y-auto safe-area-bottom"
             onClick={(e) => e.stopPropagation()}
           >
             <h4 className="text-base font-bold text-gray-800 dark:text-gray-100">

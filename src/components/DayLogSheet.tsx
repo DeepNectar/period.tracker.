@@ -147,7 +147,7 @@ export function DayLogSheet({ day, entries, onEndPeriod, onUpdateEntry }: Props)
       {open && (
         <div className="fixed inset-0 z-[300] bg-black/40 flex items-end justify-center" onClick={() => setOpen(false)}>
           <div
-            className="bg-white dark:bg-gray-800 w-full sm:max-w-md rounded-t-3xl p-5 space-y-4 max-h-[85vh] overflow-y-auto"
+            className="bg-white dark:bg-gray-800 w-full sm:max-w-lg rounded-t-3xl p-4 sm:p-5 space-y-4 max-h-[85dvh] overflow-y-auto safe-area-bottom"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
