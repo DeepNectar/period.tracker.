@@ -46,9 +46,11 @@ const TOOLS: { id: ToolId; emoji: string; name: string; desc: string }[] = [
   { id: 'data', emoji: '💾', name: 'Data & Sync', desc: 'Calendar (.ics), CSV/JSON export, PDF report, restore' },
 ];
 
+// min-w-0 + max-w-full keep boxes from ever exceeding the phone screen width.
 const inputCls =
-  'w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-pink-300';
-const card = 'bg-white dark:bg-gray-800 rounded-3xl p-4 shadow-sm border border-pink-100 dark:border-gray-700';
+  'block w-full min-w-0 max-w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-pink-300';
+const card =
+  'max-w-full overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-3.5 sm:p-4 shadow-sm border border-pink-100 dark:border-gray-700';
 
 function Disclaimer() {
   return (
@@ -63,9 +65,13 @@ function Disclaimer() {
 
 function ResultRow({ label, value, highlight }: { label: string; value: React.ReactNode; highlight?: boolean }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
-      <span className="text-xs text-gray-500 dark:text-gray-400">{label}</span>
-      <span className={`text-sm font-semibold text-right ${highlight ? 'text-pink-600 dark:text-pink-400' : 'text-gray-800 dark:text-gray-100'}`}>
+    <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
+      <span className="min-w-0 flex-1 basis-auto text-xs text-gray-500 dark:text-gray-400">{label}</span>
+      <span
+        className={`min-w-0 max-w-full break-words text-right text-sm font-semibold ${
+          highlight ? 'text-pink-600 dark:text-pink-400' : 'text-gray-800 dark:text-gray-100'
+        }`}
+      >
         {value}
       </span>
     </div>
@@ -111,7 +117,7 @@ function CycleLengthTool({ entries }: { entries: PeriodEntry[] }) {
                 ? `Using ${starts.length} periods from your logged history ✨`
                 : `Auto-filled from your logged history ✨ — log one more period to calculate an average`}
             </p>
-            <p className="text-[11px] text-gray-500 dark:text-gray-400">
+            <p className="text-[11px] break-words text-gray-500 dark:text-gray-400">
               {starts.slice(-8).map(fmtDateShort).join(' · ')}
             </p>
           </div>
@@ -285,9 +291,9 @@ function DueDateTool({ entries }: { entries: PeriodEntry[] }) {
 
       {result && (
         <>
-          <div className="bg-gradient-to-br from-pink-500 to-purple-500 rounded-3xl p-5 text-white shadow-lg text-center">
+          <div className="bg-gradient-to-br from-pink-500 to-purple-500 max-w-full overflow-hidden rounded-3xl p-4 text-white shadow-lg text-center">
             <p className="text-xs opacity-80 uppercase tracking-widest">Estimated due date</p>
-            <p className="text-2xl font-extrabold mt-1">{format(new Date(`${result.dueDate}T00:00:00`), 'd MMMM yyyy')}</p>
+            <p className="mt-1 break-words text-xl sm:text-2xl font-extrabold">{format(new Date(`${result.dueDate}T00:00:00`), 'd MMMM yyyy')}</p>
             <p className="text-xs opacity-90 mt-2">
               Today you are{' '}
               <b>
@@ -378,9 +384,9 @@ function OvulationTool({ entries }: { entries: PeriodEntry[] }) {
 
       {result && (
         <>
-          <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-5 text-white shadow-lg text-center">
+          <div className="bg-gradient-to-br from-purple-500 to-pink-500 max-w-full overflow-hidden rounded-3xl p-4 text-white shadow-lg text-center">
             <p className="text-xs opacity-80 uppercase tracking-widest">Estimated ovulation day</p>
-            <p className="text-2xl font-extrabold mt-1">{fmtDate(result.ovulationDate)}</p>
+            <p className="mt-1 break-words text-xl sm:text-2xl font-extrabold">{fmtDate(result.ovulationDate)}</p>
             <p className="text-xs opacity-90 mt-2">
               {result.daysUntilOvulation > 0
                 ? `in ${result.daysUntilOvulation} day${result.daysUntilOvulation > 1 ? 's' : ''}`
@@ -717,7 +723,7 @@ export function ToolsScreen({ entries, userId = null }: Props) {
 
   if (tool) {
     return (
-      <div className="screen-pad py-3 space-y-3 max-w-xl mx-auto">
+      <div className="screen-pad py-3 space-y-3 max-w-xl mx-auto overflow-x-hidden">
         <button
           onClick={() => setActive(null)}
           className="inline-flex items-center gap-1 text-xs font-semibold text-pink-500 hover:text-pink-600"
@@ -745,7 +751,7 @@ export function ToolsScreen({ entries, userId = null }: Props) {
   }
 
   return (
-    <div className="screen-pad py-3 space-y-3 max-w-xl mx-auto">
+    <div className="screen-pad py-3 space-y-3 max-w-xl mx-auto overflow-x-hidden">
       <div className="text-center">
         <p className="text-xs uppercase tracking-widest text-pink-400 font-semibold">Tools</p>
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">Period & fertility calculators</h2>
@@ -758,14 +764,14 @@ export function ToolsScreen({ entries, userId = null }: Props) {
           <button
             key={t.id}
             onClick={() => setActive(t.id)}
-            className={`${card} w-full flex items-center gap-3 text-left hover:border-pink-300 dark:hover:border-pink-700 transition-colors active:scale-[0.99]`}
+            className={`${card} w-full min-w-0 flex items-center gap-3 text-left hover:border-pink-300 dark:hover:border-pink-700 transition-colors active:scale-[0.99]`}
           >
-            <span className="text-2xl">{t.emoji}</span>
-            <span className="flex-1">
+            <span className="text-2xl shrink-0">{t.emoji}</span>
+            <span className="min-w-0 flex-1">
               <span className="block text-sm font-bold text-gray-800 dark:text-gray-100">{t.name}</span>
-              <span className="block text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">{t.desc}</span>
+              <span className="block text-[11px] break-words text-gray-500 dark:text-gray-400 mt-0.5">{t.desc}</span>
             </span>
-            <span className="text-pink-300 text-lg">›</span>
+            <span className="shrink-0 text-pink-300 text-lg">›</span>
           </button>
         ))}
       </div>

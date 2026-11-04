@@ -100,9 +100,10 @@ const LEAD_META: Record<PrepLead, { label: string; cls: string }> = {
   advance: { label: '1+ month before', cls: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300' },
 };
 
-const card = 'bg-white dark:bg-gray-800 rounded-3xl p-4 shadow-sm border border-pink-100 dark:border-gray-700';
+const card =
+  'max-w-full overflow-hidden bg-white dark:bg-gray-800 rounded-3xl p-3.5 sm:p-4 shadow-sm border border-pink-100 dark:border-gray-700';
 const inputCls =
-  'w-full rounded-xl border border-pink-200 dark:border-gray-600 bg-pink-50/50 dark:bg-gray-900 px-3 py-2.5 text-sm text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-pink-400';
+  'block w-full min-w-0 max-w-full rounded-xl border border-pink-200 dark:border-gray-600 bg-pink-50/50 dark:bg-gray-900 px-3 py-2.5 text-sm text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-pink-400';
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return <h3 className="text-xs font-bold uppercase tracking-widest text-pink-400 mb-2">{children}</h3>;
@@ -110,9 +111,13 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 
 function ResultRow({ label, value, highlight }: { label: string; value: React.ReactNode; highlight?: boolean }) {
   return (
-    <div className="flex items-center justify-between py-1.5 border-b border-pink-50 dark:border-gray-700 last:border-0">
-      <span className="text-xs text-gray-500 dark:text-gray-400">{label}</span>
-      <span className={`text-sm font-bold ${highlight ? 'text-pink-600 dark:text-pink-400' : 'text-gray-800 dark:text-gray-100'}`}>
+    <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 py-1.5 border-b border-pink-50 dark:border-gray-700 last:border-0">
+      <span className="min-w-0 flex-1 basis-auto text-xs text-gray-500 dark:text-gray-400">{label}</span>
+      <span
+        className={`min-w-0 max-w-full break-words text-right text-sm font-bold ${
+          highlight ? 'text-pink-600 dark:text-pink-400' : 'text-gray-800 dark:text-gray-100'
+        }`}
+      >
         {value}
       </span>
     </div>
@@ -177,9 +182,9 @@ function ConceptionMode() {
       {plan ? (
         <>
           {/* Headline: estimated conception day */}
-          <div className="bg-gradient-to-br from-pink-500 to-purple-500 rounded-3xl p-5 text-white shadow-lg text-center">
+          <div className="bg-gradient-to-br from-pink-500 to-purple-500 max-w-full overflow-hidden rounded-3xl p-4 text-white shadow-lg text-center">
             <p className="text-xs opacity-80 uppercase tracking-widest">To conceive, aim for</p>
-            <p className="text-2xl font-extrabold mt-1">{formatPlanDate(plan.bestConceptionKey)}</p>
+            <p className="mt-1 break-words text-xl sm:text-2xl font-extrabold">{formatPlanDate(plan.bestConceptionKey)}</p>
             <p className="text-xs opacity-90 mt-2">
               Estimated ovulation / conception for a baby born {formatPlanDate(plan.targetBirthDate)}
             </p>
@@ -443,10 +448,10 @@ export function BirthdayCalculator() {
           {tab === 'ages' && (
             <>
               {asOf && (
-                <div className="bg-gradient-to-br from-amber-400 to-pink-500 rounded-3xl p-5 text-white shadow-lg text-center">
+                <div className="bg-gradient-to-br from-amber-400 to-pink-500 max-w-full overflow-hidden rounded-3xl p-4 text-white shadow-lg text-center">
                   <p className="text-xs opacity-80 uppercase tracking-widest">Age on {fmtDate(asOf)}</p>
                   {analysis.asOfAge ? (
-                    <p className="text-2xl font-extrabold mt-1">
+                    <p className="mt-1 break-words text-xl sm:text-2xl font-extrabold">
                       {analysis.asOfAge.years} years, {analysis.asOfAge.months} months, {analysis.asOfAge.days} days
                     </p>
                   ) : (
@@ -456,9 +461,9 @@ export function BirthdayCalculator() {
               )}
 
               {/* Countdown to the next birthday — like the site's "Your Next Birthday" */}
-              <div className="bg-gradient-to-br from-pink-500 to-purple-500 rounded-3xl p-5 text-white shadow-lg text-center">
+              <div className="bg-gradient-to-br from-pink-500 to-purple-500 max-w-full overflow-hidden rounded-3xl p-4 text-white shadow-lg text-center">
                 <p className="text-xs opacity-80 uppercase tracking-widest">Your Next Birthday</p>
-                <p className="text-2xl font-extrabold mt-1">
+                <p className="mt-1 break-words text-xl sm:text-2xl font-extrabold">
                   Turns {analysis.next.ageTurns} — {fmtDate(analysis.next.dateKey)}
                 </p>
                 <p className="text-xs opacity-90 mt-2">{analysis.birthdayWeekday}</p>
@@ -507,9 +512,9 @@ export function BirthdayCalculator() {
                   <table className="w-full text-left">
                     <thead>
                       <tr className="bg-pink-50 dark:bg-gray-900/60 text-[10px] uppercase tracking-wider text-pink-500">
-                        <th className="px-3 py-2 font-bold">#</th>
-                        <th className="px-3 py-2 font-bold">Birthday</th>
-                        <th className="px-3 py-2 font-bold">Turning</th>
+                        <th className="px-2 py-2 font-bold whitespace-nowrap">#</th>
+                        <th className="px-2 py-2 font-bold whitespace-nowrap">Birthday</th>
+                        <th className="px-2 py-2 font-bold whitespace-nowrap">Turning</th>
                         <th className="px-3 py-2 font-bold text-right">In</th>
                       </tr>
                     </thead>
@@ -521,12 +526,12 @@ export function BirthdayCalculator() {
                             i === 0 ? 'bg-pink-50/60 dark:bg-pink-900/20 font-bold' : 'bg-white dark:bg-gray-800'
                           }`}
                         >
-                          <td className="px-3 py-2 text-gray-500 dark:text-gray-400">{i + 1}</td>
-                          <td className="px-3 py-2 text-gray-800 dark:text-gray-100">
+                          <td className="px-2 py-2 text-gray-500 dark:text-gray-400">{i + 1}</td>
+                          <td className="px-2 py-2 break-words text-gray-800 dark:text-gray-100">
                             {b.weekday}, {fmtDate(b.dateKey)}
                           </td>
-                          <td className="px-3 py-2 text-gray-800 dark:text-gray-100">{b.ageTurns} yrs</td>
-                          <td className="px-3 py-2 text-right text-gray-500 dark:text-gray-400">
+                          <td className="px-2 py-2 break-words text-gray-800 dark:text-gray-100">{b.ageTurns} yrs</td>
+                          <td className="px-2 py-2 text-right whitespace-nowrap text-gray-500 dark:text-gray-400">
                             {b.daysUntil === 0 ? 'today! 🎉' : `${b.daysUntil} days`}
                           </td>
                         </tr>
@@ -540,7 +545,7 @@ export function BirthdayCalculator() {
 
           {tab === 'plan' && (
             <>
-              <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl p-5 text-white shadow-lg text-center">
+              <div className="bg-gradient-to-br from-purple-500 to-pink-500 max-w-full overflow-hidden rounded-3xl p-4 text-white shadow-lg text-center">
                 <p className="text-xs opacity-80 uppercase tracking-widest">Party planner</p>
                 <p className="text-lg font-extrabold mt-1">Plan the next 3 birthday celebrations 🎂🎈</p>
                 <p className="text-[11px] opacity-90 mt-2">

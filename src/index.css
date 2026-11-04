@@ -156,6 +156,35 @@ body.dark {
   overflow-x: hidden;
 }
 
+/* Safety net for the Tools section: no box (card, input, table, chip…) may
+   ever exceed the screen width on a phone. Long words/dates/URLs wrap inside
+   their container instead of pushing content off-screen. */
+.app-scroll img,
+.app-scroll video,
+.app-scroll canvas,
+.app-scroll svg {
+  max-width: 100%;
+}
+
+.app-scroll table {
+  max-width: 100%;
+  table-layout: auto;
+}
+
+.app-scroll th,
+.app-scroll td {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.app-scroll input,
+.app-scroll select,
+.app-scroll textarea {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
 /* iOS dynamic viewport height support (handles browser chrome resize). */
 .dvh-screen {
   min-height: 100vh;
