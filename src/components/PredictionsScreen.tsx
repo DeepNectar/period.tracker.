@@ -43,7 +43,7 @@ export function PredictionsScreen({ entries }: Props) {
 
   if (!p.hasData) {
     return (
-      <div className="screen-pad pb-24 pt-4 sm:pt-6">
+      <div className="screen-pad compact-top py-3">
         <div className="rounded-3xl p-8 bg-white dark:bg-gray-800 border border-pink-100 dark:border-gray-700 text-center shadow-sm">
           <div className="text-5xl mb-4">🔮</div>
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">No predictions yet</h2>
@@ -57,7 +57,7 @@ export function PredictionsScreen({ entries }: Props) {
   }
 
   return (
-    <div className="screen-pad pb-24 pt-4 sm:pt-6">
+    <div className="screen-pad compact-top py-3">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
@@ -70,7 +70,7 @@ export function PredictionsScreen({ entries }: Props) {
       </div>
 
       {/* Next Period Hero Card */}
-      <div className="rounded-3xl p-6 bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-950/30 dark:to-rose-950/30 border border-pink-100 dark:border-pink-900/30 shadow-sm text-center">
+      <div className="rounded-3xl p-4 sm:p-5 bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-950/30 dark:to-rose-950/30 border border-pink-100 dark:border-pink-900/30 shadow-sm text-center">
         <div className="flex items-center justify-center gap-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
           <Droplets size={14} className="text-pink-500" /> Next period
         </div>
@@ -88,7 +88,7 @@ export function PredictionsScreen({ entries }: Props) {
           </div>
         )}
         {phaseInfo && currentPhase && (
-          <div className="mt-4 flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+          <div className="mt-2.5 flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-300">
             <span className="text-xl">{phaseInfo.emoji}</span>
             <span>
               You're in your <b>{phaseInfo.label}</b> phase — day {currentPhase.dayInPhase} of {currentPhase.totalPhaseDays}
@@ -98,7 +98,7 @@ export function PredictionsScreen({ entries }: Props) {
       </div>
 
       {/* Ovulation & Fertile Window */}
-      <div className="mt-4 grid grid-cols-2 gap-3">
+      <div className="mt-2.5 grid grid-cols-2 gap-3">
         <div className="rounded-2xl p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm">
           <div className="flex items-center gap-1.5 text-purple-500 mb-1">
             <Egg size={15} />
@@ -125,7 +125,7 @@ export function PredictionsScreen({ entries }: Props) {
         groupId="predictions-boxes"
         openId={openBoxId}
         onToggle={setOpenBoxId}
-        className="mt-4 rounded-2xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm"
+        className="mt-2.5 rounded-2xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm"
         headerClassName="p-4"
         bodyClassName="px-4 pb-4"
         icon={<CalendarClock size={16} className="text-pink-500" />}
@@ -162,7 +162,7 @@ export function PredictionsScreen({ entries }: Props) {
         groupId="predictions-boxes"
         openId={openBoxId}
         onToggle={setOpenBoxId}
-        className="mt-4 rounded-2xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm"
+        className="mt-2.5 rounded-2xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm"
         headerClassName="p-4"
         bodyClassName="px-4 pb-4"
         icon={<TrendingUp size={16} className="text-purple-500" />}
@@ -208,7 +208,7 @@ export function PredictionsScreen({ entries }: Props) {
         groupId="predictions-boxes"
         openId={openBoxId}
         onToggle={setOpenBoxId}
-        className="mt-4 rounded-2xl bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/30"
+        className="mt-2.5 rounded-2xl bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/30"
         headerClassName="p-4"
         bodyClassName="px-4 pb-4"
         icon={<Info size={15} className="text-blue-500" />}

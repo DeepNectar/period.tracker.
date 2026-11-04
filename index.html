@@ -2,9 +2,35 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <!--
+      Mobile app behaviour:
+      - viewport-fit=cover  -> draw under the iPhone notch / Android status bar
+      - user-scalable=no    -> native-app feel (no accidental pinch-zoom of the UI)
+      - maximum-scale=1     -> text stays sized to fit within the screen width
+    -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
     <meta name="theme-color" content="#fdf2f8" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0b0716" media="(prefers-color-scheme: dark)" />
+
+    <!-- ===== Android (Chrome) install as an app ===== -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Period Tracker" />
+    <meta name="description" content="Private period, cycle, fertility and symptom tracker." />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- ===== iOS / iPadOS install to Home Screen ===== -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Period Tracker" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+    <link rel="mask-icon" href="/icons/icon-192.png" color="#ec4899" />
+
     <title>Period Tracker • Private & Secure</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +42,22 @@
       @media (prefers-color-scheme: dark) {
         html:not(.light):not(.dark), html:not(.light):not(.dark) body { background-color: #0b0716; color: #f5f5f5; }
       }
-      #root { width: 100%; min-height: 100%; }
+      /* The app is a single fixed-height "phone frame": nothing ever scrolls
+         sideways, only up/down inside the content area. */
+      html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+      #root {
+        width: 100%;
+        max-width: 100vw;
+        height: 100%;
+        max-height: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      /* Stop iOS Safari from rubber-banding the whole page (the inner list
+         scrolls instead, which feels like a native app). */
+      body { touch-action: pan-y; -webkit-text-size-adjust: 100%; }
+      input, textarea, select { font-size: 16px; } /* prevents iOS auto-zoom on focus */
     </style>
     <script>
       // Apply saved theme before first paint so phones never flash a

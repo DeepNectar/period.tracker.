@@ -50,8 +50,8 @@ export function PinGate({ onUnlock }: { onUnlock: () => void }) {
   }, [onUnlock]);
 
   return (
-    <div className="fixed inset-0 z-[300] bg-gradient-to-br from-purple-950 via-gray-950 to-pink-950 flex items-center justify-center p-4 sm:p-6 safe-area-top safe-area-bottom overflow-y-auto">
-      <div className="text-center max-w-xs w-full my-auto">
+    <div className="app-shell fixed inset-0 z-[300] bg-gradient-to-br from-purple-950 via-gray-950 to-pink-950 flex items-center justify-center p-4 sm:p-6 safe-area-top safe-area-bottom app-scroll">
+      <div className="text-center max-w-xs w-full mx-auto shrink-0">
         <div className="text-5xl mb-4">🔒</div>
         <h2 className="text-lg font-bold text-white mb-1">Privacy Lock</h2>
         {ownerName ? (

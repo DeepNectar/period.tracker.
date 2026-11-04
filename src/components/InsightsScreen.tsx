@@ -39,7 +39,7 @@ export function InsightsScreen({ entries }: Props) {
 
   if (loading) {
     return (
-      <div className="screen-pad pb-24 pt-6 sm:pt-8">
+      <div className="screen-pad compact-top py-3">
         <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6">Insights</h1>
         <div className="flex items-center justify-center py-20">
           <div className="animate-spin w-8 h-8 border-3 border-pink-200 border-t-pink-500 rounded-full" />
@@ -50,7 +50,7 @@ export function InsightsScreen({ entries }: Props) {
 
   if (entries.length === 0) {
     return (
-      <div className="screen-pad pb-24 pt-6 sm:pt-8">
+      <div className="screen-pad compact-top py-3">
         <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6">Insights</h1>
         <div className="flex flex-col items-center justify-center py-20">
           <div className="text-6xl mb-4">🔮</div>
@@ -69,7 +69,7 @@ export function InsightsScreen({ entries }: Props) {
   const ovulationDay = addDays(lastStart, stats.avgCycleLength - 14);
 
   return (
-    <div className="screen-pad pb-24 pt-6 sm:pt-8">
+    <div className="screen-pad compact-top py-3">
       <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">Insights</h1>
       <p className="text-xs text-gray-400 dark:text-gray-500 mb-6">
         {insight?.month ? `Updated for ${format(parseISO(insight.month + '-01'), 'MMMM yyyy')}` : 'Your cycle analysis'}

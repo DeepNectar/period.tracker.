@@ -168,7 +168,7 @@ function ConceptionMode() {
           type="button"
           onClick={handleCalculate}
           disabled={!targetInput}
-          className="mt-4 w-full px-4 py-2.5 rounded-xl bg-pink-500 text-white text-sm font-bold active:scale-95 transition-transform disabled:opacity-40"
+          className="mt-2.5 w-full px-4 py-2.5 rounded-xl bg-pink-500 text-white text-sm font-bold active:scale-95 transition-transform disabled:opacity-40"
         >
           Plan conception dates 💞
         </button>
@@ -409,7 +409,7 @@ export function BirthdayCalculator() {
           type="button"
           onClick={handleCalculate}
           disabled={!birthInput}
-          className="mt-4 w-full px-4 py-2.5 rounded-xl bg-pink-500 text-white text-sm font-bold active:scale-95 transition-transform disabled:opacity-40"
+          className="mt-2.5 w-full px-4 py-2.5 rounded-xl bg-pink-500 text-white text-sm font-bold active:scale-95 transition-transform disabled:opacity-40"
         >
           Calculate 🎉
         </button>

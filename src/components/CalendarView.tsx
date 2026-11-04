@@ -117,7 +117,7 @@ export function CalendarView({ entries, onEndPeriod, onUpdateEntry }: Props) {
     : null;
 
   return (
-    <div className="screen-pad pb-24 pt-6 sm:pt-8">
+    <div className="screen-pad compact-top py-3">
       <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Calendar</h1>
       
       {/* Month navigation */}
@@ -192,7 +192,7 @@ export function CalendarView({ entries, onEndPeriod, onUpdateEntry }: Props) {
 
       {/* Selected day detail */}
       {selectedDay && (
-        <div className="mt-4 rounded-2xl p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm animate-fade-in">
+        <div className="mt-2.5 rounded-2xl p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm animate-fade-in">
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
             {format(selectedDay, 'EEEE, d MMMM yyyy')}
           </h3>

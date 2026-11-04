@@ -85,14 +85,14 @@ export function HomeScreen({ activeEntry, entries, onStartPeriod, onNavigate }: 
   };
 
   return (
-    <div className="screen-pad pb-24 pt-2 sm:pt-4">
+    <div className="screen-pad compact-top py-3">
       <LiveClock />
 
       {/* Animated cycle journey ring */}
       {entries.length > 0 && <CycleRing entries={entries} />}
 
       {/* Status Card */}
-      <div className="mt-4 rounded-3xl p-6 bg-gradient-to-br from-pink-50 to-purple-50 dark:from-pink-950/30 dark:to-purple-950/30 border border-pink-100 dark:border-pink-900/30 shadow-sm">
+      <div className="mt-2.5 rounded-3xl p-4 sm:p-5 bg-gradient-to-br from-pink-50 to-purple-50 dark:from-pink-950/30 dark:to-purple-950/30 border border-pink-100 dark:border-pink-900/30 shadow-sm">
         {activeEntry ? (
           <div className="text-center">
             <div className="text-4xl mb-3">🩸</div>
@@ -121,7 +121,7 @@ export function HomeScreen({ activeEntry, entries, onStartPeriod, onNavigate }: 
 
       {/* Start Button */}
       {!activeEntry && !showForm && (
-        <div className="mt-4 flex gap-3">
+        <div className="mt-2.5 flex gap-3">
           <button
             onClick={() => setShowForm(true)}
             className="flex-1 py-4 rounded-2xl bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-semibold text-base shadow-lg shadow-pink-200 dark:shadow-pink-900/30 transition-all duration-200 active:scale-[0.98]"
@@ -141,7 +141,7 @@ export function HomeScreen({ activeEntry, entries, onStartPeriod, onNavigate }: 
 
       {/* Start Form */}
       {showForm && !activeEntry && (
-        <div className="mt-4 rounded-3xl p-5 bg-white dark:bg-gray-800 border border-pink-100 dark:border-gray-700 shadow-sm animate-fade-in">
+        <div className="mt-2.5 rounded-3xl p-4 bg-white dark:bg-gray-800 border border-pink-100 dark:border-gray-700 shadow-sm animate-fade-in">
           <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-4">Log Period Start</h3>
           
           {/* Flow */}
@@ -235,7 +235,7 @@ export function HomeScreen({ activeEntry, entries, onStartPeriod, onNavigate }: 
 
       {/* Cycle Phase Card */}
       {!activeEntry && phaseInfo && currentPhase && (
-        <div className="mt-4 rounded-2xl p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm">
+        <div className="mt-2.5 rounded-2xl p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="text-3xl">{phaseInfo.emoji}</div>
             <div className="flex-1">
@@ -253,7 +253,7 @@ export function HomeScreen({ activeEntry, entries, onStartPeriod, onNavigate }: 
       )}
 
       {/* Quick Stats */}
-      <div className="mt-4 grid grid-cols-2 gap-3">
+      <div className="mt-2.5 grid grid-cols-2 gap-3">
         <div className="rounded-2xl p-4 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-center shadow-sm">
           <Calendar size={18} className="mx-auto text-pink-400 mb-1" />
           <p className="text-2xl font-bold text-gray-800 dark:text-gray-100">{currentCycleDay || '—'}</p>
@@ -275,7 +275,7 @@ export function HomeScreen({ activeEntry, entries, onStartPeriod, onNavigate }: 
           groupId="home-boxes"
           openId={openBoxId}
           onToggle={setOpenBoxId}
-          className="mt-4 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 border border-purple-100 dark:border-purple-900/30 shadow-sm"
+          className="mt-2.5 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 border border-purple-100 dark:border-purple-900/30 shadow-sm"
           headerClassName="p-4"
           bodyClassName="px-4 pb-4"
           icon={<Sparkles size={16} className="text-purple-500" />}
@@ -310,7 +310,7 @@ export function HomeScreen({ activeEntry, entries, onStartPeriod, onNavigate }: 
       )}
 
       {/* Cycle Stats */}
-      <div className="mt-4 grid grid-cols-3 gap-3">
+      <div className="mt-2.5 grid grid-cols-3 gap-3">
         <div className="rounded-2xl p-3 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 text-center shadow-sm">
           <Clock size={14} className="mx-auto text-pink-400 mb-1" />
           <p className="text-lg font-bold text-gray-800 dark:text-gray-100">{stats.avgCycleLength}</p>
@@ -340,7 +340,7 @@ export function HomeScreen({ activeEntry, entries, onStartPeriod, onNavigate }: 
             groupId="home-boxes"
             openId={openBoxId}
             onToggle={setOpenBoxId}
-            className="mt-4 rounded-2xl bg-gradient-to-br from-violet-50 to-fuchsia-50 dark:from-violet-950/30 dark:to-fuchsia-950/30 border border-violet-100 dark:border-violet-900/30 shadow-sm"
+            className="mt-2.5 rounded-2xl bg-gradient-to-br from-violet-50 to-fuchsia-50 dark:from-violet-950/30 dark:to-fuchsia-950/30 border border-violet-100 dark:border-violet-900/30 shadow-sm"
             headerClassName="p-4"
             bodyClassName="px-4 pb-4"
             title="🔮 Your Predictions"
@@ -383,7 +383,7 @@ export function HomeScreen({ activeEntry, entries, onStartPeriod, onNavigate }: 
           groupId="home-boxes"
           openId={openBoxId}
           onToggle={setOpenBoxId}
-          className="mt-4 rounded-2xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm"
+          className="mt-2.5 rounded-2xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm"
           headerClassName="p-4"
           bodyClassName="px-4 pb-4"
           title="Cycle Phases"
