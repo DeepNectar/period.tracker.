@@ -11,7 +11,7 @@ import { ToolsScreen } from './components/ToolsScreen';
 import { PinGate } from './components/PinLock';
 import { usePeriodData } from './hooks/usePeriodData';
 import { useAuth, getProfileName } from './hooks/useAuth';
-import { isLocked, armLock, disarmLock, getLockTimeout, refreshPrivacyLock, subscribePrivacyLock, PRIVACY_SESSION_UNLOCK_KEY } from './hooks/usePrivacyLock';
+import { isLocked, armLock, disarmLock, hasPrivacyPin, getLockTimeout, refreshPrivacyLock, subscribePrivacyLock, PRIVACY_SESSION_UNLOCK_KEY } from './hooks/usePrivacyLock';
 import { Moon, Sun, RefreshCw, AlertCircle, Database } from 'lucide-react';
 
 type Screen = 'home' | 'today' | 'history' | 'calendar' | 'predictions' | 'tools' | 'insights';
@@ -60,9 +60,18 @@ function AppContent() {
     };
 
     // Pull the cross-device lock config (set on any other device) at startup
-    // and whenever auth/session changes.
+    // and whenever auth/session changes. NOTE: when no PIN is configured we
+    // must explicitly clear `locked` — otherwise a stale armed-lock left in
+    // localStorage from an old session could keep the app locked forever with
+    // no way to enter a PIN (the gate never shows because hasPrivacyPin() is
+    // false), which looks exactly like "the lock isn't working".
     void refreshPrivacyLock().then((cfg) => {
-      if (cfg.enabled && isLocked()) setLocked(true);
+      if (!cfg.enabled && !hasPrivacyPin()) {
+        disarmLock();
+        setLocked(false);
+      } else if (cfg.enabled) {
+        setLocked(isLocked());
+      }
     });
     const unsub = subscribePrivacyLock((cfg) => {
       setProfileTick((t) => t + 1); // owner name may have changed on another device
@@ -72,7 +81,16 @@ function AppContent() {
         sessionStorage.removeItem(PRIVACY_SESSION_UNLOCK_KEY);
         setLocked(false);
       } else {
-        setLocked(isLocked());
+        // A PIN is active (set on this or another device). Re-evaluate the
+        // lock state for THIS tab: an "unlocked" flag that predates the moment
+        // the lock was armed must NOT keep the tab open — otherwise applying a
+        // PIN would appear to do nothing ("screen not getting locked").
+        if (isLocked()) {
+          sessionStorage.removeItem(PRIVACY_SESSION_UNLOCK_KEY);
+          setLocked(true);
+        } else {
+          setLocked(false);
+        }
       }
     });
 

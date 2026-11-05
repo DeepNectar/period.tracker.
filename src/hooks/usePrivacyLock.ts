@@ -242,15 +242,21 @@ export async function enablePrivacyLock(pin: string, ownerName?: string): Promis
   localStorage.setItem('pt_privacy_local_salt', salt);
   if (name) setLocalProfileName(name);
 
+  // Arm BEFORE emitting to listeners and make sure this tab is NOT considered
+  // already-unlocked — otherwise App.tsx's subscribePrivacyLock callback would
+  // evaluate isLocked() as false for the still-open session and the freshly
+  // applied PIN would appear to do nothing ("screen not getting locked").
+  armLock();
+  sessionStorage.removeItem(SESSION_UNLOCK_KEY);
+
   const userId = await getCurrentUserId();
   let synced = false;
   if (userId) {
-    synced = await writeRemoteLock(userId, cfg);
+    synced = await writeRemoteLock(userId, cfg); // emits → App locks the screen now
   } else {
     cachedCfg = cfg;
     emit(cfg);
   }
-  armLock(); // takes effect immediately on next open/background
   return { ok: true, synced };
 }
 
@@ -335,15 +341,22 @@ export function usePrivacyLock() {
 // ---------- Per-device lock state (localStorage) ----------
 
 export function armLock() {
-  localStorage.setItem(LOCK_UNTIL_KEY, String(Date.now() + 24 * 60 * 60 * 1000));
+  const now = Date.now();
+  localStorage.setItem(LOCK_UNTIL_KEY, String(now + 24 * 60 * 60 * 1000));
+  // Record WHEN the lock was armed so a session-unlock flag that predates this
+  // (e.g. the tab was open before the PIN was applied on another device) can
+  // never be mistaken for a genuine unlock of the new PIN.
+  localStorage.setItem(ARMED_AT_KEY, String(now));
 }
 
 export function disarmLock() {
   localStorage.removeItem(LOCK_UNTIL_KEY);
+  localStorage.removeItem(ARMED_AT_KEY);
 }
 
 export function clearLocalLockState() {
   localStorage.removeItem(LOCK_UNTIL_KEY);
+  localStorage.removeItem(ARMED_AT_KEY);
   localStorage.removeItem(LOCAL_ARMED_KEY);
   localStorage.removeItem('pt_privacy_local_salt');
   sessionStorage.removeItem(SESSION_UNLOCK_KEY);
@@ -352,26 +365,51 @@ export function clearLocalLockState() {
 /**
  * Locked when a PIN exists AND either the lock is armed (app was closed /
  * backgrounded) OR this is a fresh session (reload / new tab / new device).
+ * A session flag left over from BEFORE the lock was last armed doesn't count
+ * as an unlock — otherwise a stale tab could silently bypass a freshly-set PIN.
  */
 export function isLocked(): boolean {
   if (!hasPrivacyPin()) return false;
   const until = Number(localStorage.getItem(LOCK_UNTIL_KEY));
-  if (Number.isFinite(until) && until > Date.now()) return true;
+  if (Number.isFinite(until) && until > Date.now()) {
+    // Armed: unlocked only if this tab verified the PIN after arming time.
+    return !isSessionUnlockedAfterArm();
+  }
   return !sessionStorage.getItem(SESSION_UNLOCK_KEY);
 }
 
 export function markSessionUnlocked() {
   disarmLock();
-  sessionStorage.setItem(SESSION_UNLOCK_KEY, '1');
+  // Store a timestamp (not just "1") so we can tell whether this unlock
+  // happened before or after the lock was last armed.
+  sessionStorage.setItem(SESSION_UNLOCK_KEY, String(Date.now()));
 }
 
 /**
- * Arm the lock WITHOUT touching the current session — used right after a PIN
- * is created so the freshly-set gate takes effect on the very next reload or
- * background event (the current tab stays usable until then).
+ * Arm the lock WITHOUT unlocking the current tab. Used right after a PIN is
+ * created so the freshly-set gate takes effect on the very next reload,
+ * background event, or app open — even in a PWA that never reloads. The
+ * session-unlock stamp is intentionally NOT refreshed here: an unlock that
+ * predates this arm must not keep the tab open (see `isLocked`).
  */
 export function armLockKeepSession() {
-  localStorage.setItem(LOCK_UNTIL_KEY, String(Date.now() + 24 * 60 * 60 * 1000));
+  armLock();
+}
+
+const ARMED_AT_KEY = 'pt_lock_armed_at';
+
+/** Timestamp when the lock was last armed, or null if never. */
+export function getArmedAt(): number | null {
+  const v = Number(localStorage.getItem(ARMED_AT_KEY));
+  return Number.isFinite(v) && v > 0 ? v : null;
+}
+
+/** True if the current tab/session was unlocked after the lock was armed. */
+export function isSessionUnlockedAfterArm(): boolean {
+  const armedAt = getArmedAt();
+  if (armedAt === null) return true; // nothing armed yet
+  const stamp = Number(sessionStorage.getItem(SESSION_UNLOCK_KEY));
+  return Number.isFinite(stamp) && stamp >= armedAt;
 }
 
 // ---------- Auto-lock timing (per-device preference) ----------
